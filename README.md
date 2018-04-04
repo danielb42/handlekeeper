@@ -9,13 +9,14 @@ When a file is moved (e.g. rotated) open file handles travel along with it.
 ```
 
 func main() {
-    err := handlekeeper.OpenFile("/var/log/rotating.log")
+    handlekeeper.OpenFile("/var/log/rotating.log")
     defer handlekeeper.Close()
-
-    # oh no, logrotate moved rotating.log to rotating.log.1
     
     scanner := bufio.NewScanner(handlekeeper.InputFile)
+    ...
 
-    # nice, that scanner is still aimed at "rotating.log" ...
+    # oh no, now logrotate moved "rotating.log" to "rotating.log.1".
+    # normally my scanner would have travelled along, but it 
+    # continues to read from "rotating.log". thanks, handlekeeper!
 }
 ```
