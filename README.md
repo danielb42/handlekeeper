@@ -1,24 +1,20 @@
 # handlekeeper
 
-Wrapper for os.OpenFile() - keeps a filehandle pointed to a files' original location even if the file is moved (e.g. rotated) somewhere else or deleted. A new, empty file is created at the location instantly and the known file handle is preserved. 
-
-In a regular scenario the filehandle would move along with the file, thus ceasing to read/write the intended location. `handlekeeper` intends to help applications with keeping track of active textfiles by presenting "stable" file handles.
+`handlekeeper` is a wrapper for `os.OpenFile()`. It intends to help applications with keeping track of active textfiles by presenting "stable" file handles even when the opened files are moved or deleted. This is achieved by instantly creating a new, empty file in the location of the original file, and re-opening the corresponding filehandle internally.
 
 ## Usage / Example
 Here, `/var/log/myApp.log` can be moved or deleted without having to reopen file handles in the reading/writing application. 
 
 ```
-	hk := handlekeeper.NewHandlekeeper("/var/log/myApp.log")
-    defer hk.Close()
-
-	for {
-		scanner := bufio.NewScanner(hk.Handle)
-
-		for scanner.Scan() {
-			println(scanner.Text())
-		}
-
-		time.Sleep(time.Second)
+hk := handlekeeper.NewHandlekeeper("/var/log/myApp.log")
+defer hk.Close()
+for {
+	scanner := bufio.NewScanner(hk.Handle)
+	for scanner.Scan() {
+		println(scanner.Text())
+	}
+	
+	time.Sleep(time.Second)
 	}
 }
 
