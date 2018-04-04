@@ -17,7 +17,6 @@ for {
 	}
 	
 	time.Sleep(time.Second)
-	}
 }
 
 ```
