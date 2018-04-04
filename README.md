@@ -8,8 +8,10 @@ Here, `/var/log/myApp.log` can be moved or deleted without having to reopen file
 ```
 hk := handlekeeper.NewHandlekeeper("/var/log/myApp.log")
 defer hk.Close()
+
 for {
 	scanner := bufio.NewScanner(hk.Handle)
+
 	for scanner.Scan() {
 		println(scanner.Text())
 	}
