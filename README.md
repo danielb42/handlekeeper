@@ -2,7 +2,7 @@
 
 Wrapper to os.OpenFile() to avoid moving file handles.
 
-When a file is moved (e.g. rotated) open file handles travel along with it. 
+When a file is moved (e.g. rotated) open file handles travel along with it.  
 `handlekeeper` instantly reopens a file handle to a newly created file in the original location.
 
 ## Example
