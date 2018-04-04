@@ -1,22 +1,25 @@
 # handlekeeper
 
-Wrapper to os.OpenFile() to avoid moving file handles.
+Wrapper for os.OpenFile() - keeps a filehandle pointed to a files' original location even if the file is moved (e.g. rotated) somewhere else or deleted. A new, empty file is created at the location instantly and the known file handle is preserved. 
 
-When a file is moved (e.g. rotated) open file handles travel along with it.  
-`handlekeeper` instantly reopens a file handle to a newly created file in the original location.
+In a regular scenario the filehandle would move along with the file, thus ceasing to read/write the intended location. `handlekeeper` intends to help applications with keeping track of active textfiles by presenting "stable" file handles.
 
-## Example
+## Usage / Example
+Here, `/var/log/myApp.log` can be moved or deleted without having to reopen file handles in the reading/writing application. 
+
 ```
+	hk := handlekeeper.NewHandlekeeper("/var/log/myApp.log")
+    defer hk.Close()
 
-func main() {
-    handlekeeper.OpenFile("/var/log/rotating.log")
-    defer handlekeeper.Close()
-    
-    scanner := bufio.NewScanner(handlekeeper.InputFile)
-    ...
+	for {
+		scanner := bufio.NewScanner(hk.Handle)
 
-    # oh no, now logrotate moved "rotating.log" to "rotating.log.1".
-    # normally my scanner would have travelled along, but it 
-    # continues to read from "rotating.log". thanks, handlekeeper!
+		for scanner.Scan() {
+			println(scanner.Text())
+		}
+
+		time.Sleep(time.Second)
+	}
 }
+
 ```
