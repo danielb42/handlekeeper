@@ -8,22 +8,28 @@ import (
 	"github.com/tywkeene/go-fsevents"
 )
 
-var (
-	InputFile *os.File
-)
-
-func OpenFile(file string) error {
-	var err error
-	InputFile, err = os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0644)
-	go inotifyListener(file)
-	return err
+type Handlekeeper struct {
+	Handle *os.File
 }
 
-func Close() error {
-	return InputFile.Close()
+func NewHandlekeeper(file string) *Handlekeeper {
+	hk := &Handlekeeper{}
+	hk.openFile(file)
+	hk.startInotifyListener(file)
+
+	return hk
 }
 
-func inotifyListener(file string) {
+func (hk *Handlekeeper) openFile(file string) {
+	fh, _ := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0644)
+	hk.Handle = fh
+}
+
+func (hk *Handlekeeper) Close() error {
+	return hk.Close()
+}
+
+func (hk *Handlekeeper) startInotifyListener(file string) {
 	options := &fsevents.WatcherOptions{
 		Recursive: false,
 	}
@@ -36,11 +42,13 @@ func inotifyListener(file string) {
 	w.StartAll()
 	go w.Watch()
 
-	for {
-		event := <-w.Events
+	go func() {
+		for {
+			event := <-w.Events
 
-		if event.IsFileRemoved() && event.Path == file {
-			OpenFile(file)
+			if event.IsFileRemoved() && event.Path == file {
+				hk.openFile(file)
+			}
 		}
-	}
+	}()
 }
