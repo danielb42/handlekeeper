@@ -12,21 +12,27 @@ type Handlekeeper struct {
 	Handle *os.File
 }
 
-func NewHandlekeeper(file string) *Handlekeeper {
+func NewHandlekeeper(file string) (*Handlekeeper, error) {
 	hk := &Handlekeeper{}
-	hk.openFile(file)
+	err := hk.openFile(file)
 	hk.startInotifyListener(file)
 
-	return hk
+	return hk, err
 }
 
-func (hk *Handlekeeper) openFile(file string) {
-	fh, _ := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0644)
+func (hk *Handlekeeper) openFile(file string) error {
+	fh, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0644)
+
+	if err != nil {
+		return err
+	}
+
 	hk.Handle = fh
+	return nil
 }
 
 func (hk *Handlekeeper) Close() error {
-	return hk.Close()
+	return hk.Handle.Close()
 }
 
 func (hk *Handlekeeper) startInotifyListener(file string) {
@@ -43,11 +49,16 @@ func (hk *Handlekeeper) startInotifyListener(file string) {
 	go w.Watch()
 
 	go func() {
+		defer w.StopAll()
+
 		for {
 			event := <-w.Events
 
 			if event.IsFileRemoved() && event.Path == file {
-				hk.openFile(file)
+				err := hk.openFile(file)
+				if err != nil {
+					break
+				}
 			}
 		}
 	}()
