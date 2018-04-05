@@ -6,7 +6,10 @@
 Here, `/var/log/myApp.log` can be moved or deleted without having to reopen file handles in the reading/writing application. 
 
 ```
-hk := handlekeeper.NewHandlekeeper("/var/log/myApp.log")
+hk, err := handlekeeper.NewHandlekeeper("/var/log/myApp.log")
+if err != nil {
+    panic("file could not be opened")
+}
 defer hk.Close()
 
 for {
