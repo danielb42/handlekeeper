@@ -15,11 +15,11 @@ func NewHandlekeeper(file string) (*Handlekeeper, error) {
 	hk := &Handlekeeper{}
 
 	if err := hk.openFile(file); err != nil {
-		return &Handlekeeper{}, err
+		return nil, err
 	}
 
 	if err := hk.startInotifyListener(file); err != nil {
-		return &Handlekeeper{}, err
+		return nil, err
 	}
 
 	return hk, nil
