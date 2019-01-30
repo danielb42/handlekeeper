@@ -4,7 +4,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/tywkeene/go-fsevents"
+	fse "github.com/tywkeene/go-fsevents"
 )
 
 // Handlekeeper holds the actual file handle
@@ -43,11 +43,11 @@ func (hk *Handlekeeper) Close() error {
 }
 
 func (hk *Handlekeeper) startInotifyListener(file string) error {
-	options := &fsevents.WatcherOptions{
+	options := &fse.WatcherOptions{
 		Recursive: false,
 	}
 
-	w, err := fsevents.NewWatcher(path.Dir(file), fsevents.FileRemovedEvent, options)
+	w, err := fse.NewWatcher(path.Dir(file), fse.FileRemovedEvent, options)
 
 	if err != nil {
 		return err
