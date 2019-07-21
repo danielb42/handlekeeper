@@ -43,11 +43,7 @@ func (hk *Handlekeeper) Close() error {
 }
 
 func (hk *Handlekeeper) startInotifyListener(file string) error {
-	options := &fse.WatcherOptions{
-		Recursive: false,
-	}
-
-	w, err := fse.NewWatcher(path.Dir(file), fse.FileRemovedEvent, options)
+	w, err := fse.NewWatcher(path.Dir(file), fse.FileRemovedEvent)
 
 	if err != nil {
 		return err
