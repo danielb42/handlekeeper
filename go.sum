@@ -1,4 +1,4 @@
-github.com/tywkeene/go-fsevents v0.0.0-20190326153206-dbea1ece5b95 h1:TXT8+YWz0hJdWt6vhP92y9rBVBTpBBXodFvjmiM53Ps=
-github.com/tywkeene/go-fsevents v0.0.0-20190326153206-dbea1ece5b95/go.mod h1:rbgc/7/+eO0eK6vGRxtIYvheko4+yXhQQE0pgUvmsM4=
-golang.org/x/sys v0.0.0-20190712062909-fae7ac547cb7 h1:LepdCS8Gf/MVejFIt8lsiexZATdoGVyp5bcyS+rYoUI=
-golang.org/x/sys v0.0.0-20190712062909-fae7ac547cb7/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+github.com/tywkeene/go-fsevents v0.1.0 h1:T1ymCecY4UwyqwKX8c0/fGIFHuyrZRDTR9eqOx8j4e0=
+github.com/tywkeene/go-fsevents v0.1.0/go.mod h1:y+WkSWYjTzTTBqZWIOwhe7qTTGjfyy5CzO1fjlnqv4s=
+golang.org/x/sys v0.0.0-20190912141932-bc967efca4b8 h1:41hwlulw1prEMBxLQSlMSux1zxJf07B3WPsdjJlKZxE=
+golang.org/x/sys v0.0.0-20190912141932-bc967efca4b8/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
