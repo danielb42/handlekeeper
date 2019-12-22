@@ -7,12 +7,10 @@ import (
 	fse "github.com/tywkeene/go-fsevents"
 )
 
-// Handlekeeper holds the actual file handle
 type Handlekeeper struct {
 	Handle *os.File
 }
 
-// NewHandlekeeper returns a *Handlekeeper wrapping a file handle
 func NewHandlekeeper(file string) (*Handlekeeper, error) {
 	hk := &Handlekeeper{}
 
@@ -37,7 +35,6 @@ func (hk *Handlekeeper) openFile(file string) error {
 	return err
 }
 
-// Close closes the file handle.
 func (hk *Handlekeeper) Close() error {
 	return hk.Handle.Close()
 }
@@ -53,11 +50,14 @@ func (hk *Handlekeeper) startInotifyListener(file string) error {
 		return err
 	}
 
-	w.StartAll()
+	if err = w.StartAll(); err != nil {
+		return err
+	}
+
 	go w.Watch()
 
 	go func() {
-		defer w.StopAll()
+		defer w.StopAll() //nolint:errcheck
 
 		for {
 			event := <-w.Events
@@ -70,5 +70,5 @@ func (hk *Handlekeeper) startInotifyListener(file string) error {
 		}
 	}()
 
-	return err
+	return nil
 }
